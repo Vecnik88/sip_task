@@ -59,16 +59,10 @@ static const size_t eth_hdr_len = sizeof(struct eth_hdr);
 static const size_t ip_hdr_len = sizeof(struct ip_hdr);
 static const size_t udp_hdr_len = sizeof(struct udp_hdr);
 
-static const size_t str_method_ack_len = strlen(SIP_METHOD_ACK);
-static const size_t str_method_bye_len = strlen(SIP_METHOD_BYE);
-static const size_t str_method_cancel_len = strlen(SIP_METHOD_CANCEL);
-static const size_t str_method_invite_len = strlen(SIP_METHOD_INVITE);
-static const size_t str_method_options_len = strlen(SIP_METHOD_OPTIONS);
-static const size_t str_method_register_len = strlen(SIP_METHOD_REGISTER);
-
 static void parse_sip(const uint8_t *data)
 {
     uint8_t *payload;
+    char *packet_type = "unknown";
 
     if (!data) {
         printf("%s data is null pointer\n", __func__);
@@ -85,20 +79,35 @@ static void parse_sip(const uint8_t *data)
         ntohs(udphdr->src_port) != SIP_SRC_PORT)
         return;
     payload = (uint8_t *)((uint8_t *)udphdr + udp_hdr_len);
-    if (!strncmp(payload, SIP_METHOD_ACK, str_method_ack_len))
-        printf("SIP packet type " SIP_METHOD_ACK "\n");
-    else if (!strncmp(payload, SIP_METHOD_BYE, str_method_bye_len))
-        printf("SIP packet type " SIP_METHOD_BYE "\n");
-    else if (!strncmp(payload, SIP_METHOD_CANCEL, str_method_cancel_len))
-        printf("SIP packet type " SIP_METHOD_CANCEL "\n");
-    else if (!strncmp(payload, SIP_METHOD_INVITE, str_method_invite_len))
-        printf("SIP packet type " SIP_METHOD_INVITE "\n");
-    else if (!strncmp(payload, SIP_METHOD_OPTIONS, str_method_options_len))
-        printf("SIP packet type " SIP_METHOD_OPTIONS "\n");
-    else if (!strncmp(payload, SIP_METHOD_REGISTER, str_method_register_len))
-        printf("SIP packet type " SIP_METHOD_REGISTER "\n");
-    else
-        printf("SIP packet unknow type\n");
+    switch (payload[0]) {
+    case 'A':
+        if (!strncmp(&payload[1], "CK", 2))
+            packet_type = "ACK";
+        break;
+    case 'B':
+        if (!strncmp(&payload[1], "YE", 2))
+            packet_type = "BYE";
+        break;
+    case 'C':
+        if (!strncmp(&payload[1], "ANCEL", 5))
+            packet_type = "CANCEL";
+        break;
+    case 'I':
+        if (!strncmp(&payload[1], "NVITE", 5))
+            packet_type = "INVITE";
+        break;
+    case 'O':
+        if (!strncmp(&payload[1], "PTIONS", 6))
+            packet_type = "OPTIONS";
+        break;
+    case 'R':
+        if (!strncmp(&payload[1], "EGISTER", 7))
+            packet_type = "REGISTER";
+        break;
+    default:
+        break;
+    }
+    printf("Sip packet type %s\n", packet_type);
 }
 
 static void handler(u_char *args,
