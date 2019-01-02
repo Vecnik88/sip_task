@@ -46,6 +46,7 @@ struct udp_hdr {
 
 Build and run(run only root):
 
-	cd /path_to_this_folder
+	git clone https://github.com/Vecnik88/sip_task.git
+	cd sip_task
 	make
 	sudo ./parse_sip -h
