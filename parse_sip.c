@@ -48,13 +48,6 @@ struct udp_hdr {
 #define SIP_DST_PORT 5060
 #define SIP_SRC_PORT SIP_DST_PORT
 
-#define SIP_METHOD_ACK      "ACK"
-#define SIP_METHOD_BYE      "BYE"
-#define SIP_METHOD_CANCEL   "CANCEL"
-#define SIP_METHOD_INVITE   "INVITE"
-#define SIP_METHOD_OPTIONS  "OPTIONS"
-#define SIP_METHOD_REGISTER "REGISTER"
-
 static const size_t eth_hdr_len = sizeof(struct eth_hdr);
 static const size_t ip_hdr_len = sizeof(struct ip_hdr);
 static const size_t udp_hdr_len = sizeof(struct udp_hdr);
