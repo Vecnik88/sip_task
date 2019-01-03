@@ -68,7 +68,7 @@ static void parse_sip(const uint8_t *data)
     if (iphdr->next_proto_id != IPPROTO_UDP)
         return;
     struct udp_hdr *udphdr = (struct udp_hdr *)((uint8_t *)iphdr + ip_hdr_len);
-    if (ntohs(udphdr->dst_port) != SIP_DST_PORT &&
+    if (ntohs(udphdr->dst_port) != SIP_DST_PORT ||
         ntohs(udphdr->src_port) != SIP_SRC_PORT)
         return;
     payload = (uint8_t *)((uint8_t *)udphdr + udp_hdr_len);
